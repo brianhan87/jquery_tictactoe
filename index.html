@@ -43,8 +43,16 @@
 			begin: function(){
 				$('body').addClass('game-on');
 				$('td').click(function(){
+					if ($(this).hasClass('taken')) {
+						return false;
+					}
+					game.turn = game.turn=="X" ? "O" : "X";
 					$(this).text(game.turn).addClass('taken');
-					game.turn_over();
+					if ($('td.taken').length > 4) { // nobody can win until the 5th turn
+						var win = game.check_win($(this).parent().index(), $(this).index());
+						alert(win);
+					}
+					game.turn_begin();
 				});
 				$('input').attr('disabled', 'disabled');
 				game.turn_begin();
@@ -52,13 +60,27 @@
 			turn_begin: function(){
 				$('caption').text('Your turn, ' + this.turn);
 			},
-			turn_over: function(){
-				this.turn = this.turn=="X" ? "O" : "X";
-				this.turn_begin();
+			check_win: function(row, col){
+				var win = this.check_win_row(row);
+				if (win) { return true; }
+				win = this.check_win_col(col);
+				// todo: check diagonals
+				return win;
+			},
+			check_win_row: function(row) {
+				var cells = $('tr:eq(' + row + ') td');
+				if (cells.eq(0).text() == cells.eq(1).text() && cells.eq(1).text() == cells.eq(2).text()) {
+					return true;
+				}
+				return false;
+			},
+			check_win_col: function(col) {
+				// do
+				return false;
 			}
 		};
 		$(function(){
-			$('input').click(game.begin);
+			game.begin();
 		});
 	</script>
 
@@ -73,9 +95,6 @@
 		<tr><td></td><td></td><td></td></tr>
 		<tr><td></td><td></td><td></td></tr>
 	</table>
-	<p>
-		<input type="button" value="Start Game" />
-	</p>
 
 </body>
 </html>
