@@ -7,9 +7,13 @@
 	<meta name="keywords" content="" />
 	<meta name="viewport" content="width=device-width" />
 	<style type="text/css">
-		body {
+		body, input {
 			font-size: 1.5em;
 			font-family: Helvetica, Arial;
+			text-align: center;
+		}
+		table {
+			margin: 0 auto;
 		}
 		td {
 			border: 1px solid black;
@@ -18,7 +22,18 @@
 			line-height: 200px;
 			font-size: 8em;
 			font-weight: bold;
-			text-align: center;
+		}
+		body.game-on td {
+			cursor: pointer;
+		}
+		body.game-on td:hover {
+			background-color: gray;
+		}
+		body.game-on td.taken {
+			cursor: auto;
+		}
+		body.game-on td.taken:hover {
+			background-color: white;
 		}
 	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -26,14 +41,20 @@
 		var game = {
 			turn: "X",
 			begin: function(){
-				$('caption').val('Your turn, ' + this.turn);
+				$('body').addClass('game-on');
 				$('td').click(function(){
-					$(this).text(game.turn);
+					$(this).text(game.turn).addClass('taken');
 					game.turn_over();
 				});
+				$('input').attr('disabled', 'disabled');
+				game.turn_begin();
+			},
+			turn_begin: function(){
+				$('caption').text('Your turn, ' + this.turn);
 			},
 			turn_over: function(){
 				this.turn = this.turn=="X" ? "O" : "X";
+				this.turn_begin();
 			}
 		};
 		$(function(){
@@ -52,8 +73,9 @@
 		<tr><td></td><td></td><td></td></tr>
 		<tr><td></td><td></td><td></td></tr>
 	</table>
-
-	<input type="button" value="Start Game" />
+	<p>
+		<input type="button" value="Start Game" />
+	</p>
 
 </body>
 </html>
