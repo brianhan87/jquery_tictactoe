@@ -3,14 +3,15 @@
 <head>
 	<meta charset="utf-8" />
 	<title>jQuery Tic-Tac-Toe</title>
-	<meta name="description" content="" />
-	<meta name="keywords" content="" />
+	<meta name="description" content="Simple Tic-Tac-Toe game built using HTML5, JavaScript, jQuery, and CSS." />
+	<meta name="keywords" content="tic-tac-toe, game, html5, javascript, jquery, css" />
 	<meta name="viewport" content="width=device-width" />
 	<style type="text/css">
-		body, input {
+		body {
 			font-size: 1.5em;
 			font-family: Helvetica, Arial;
 			text-align: center;
+			font-weight: bold;
 		}
 		table {
 			margin: 0 auto;
@@ -24,7 +25,6 @@
 			height: 200px;
 			line-height: 200px;
 			font-size: 8em;
-			font-weight: bold;
 		}
 		body.game-on td {
 			cursor: pointer;
@@ -49,7 +49,14 @@
 			instruct: function(str) {
 				$('caption').text(str);
 			},
-			begin: function(){
+			begin: function() {
+				// reset things in case there is an existing game to clear
+				$('body').off('click'); // remove new game event handler
+				$('td')
+					.text('')
+					.removeClass('taken')
+					.removeClass('win');
+				// begin
 				$('body').addClass('game-on');
 				$('td').click(function(){
 					if ($(this).hasClass('taken')) {
@@ -59,23 +66,24 @@
 					var game_over = false;
 					if ($('td.taken').length > 4) { // nobody can win until the 5th turn
 						if (game.win_on_turn($(this).parent().index(), $(this).index())) {
-							game.instruct("Game over, " + game.turn + " won");
+							game.instruct("Game over, " + game.turn + " won. Click to play again.");
 							game_over = true;
 						}
 						else if ($('td.taken').length == 9) {
-							game.instruct("Game over: tie game");
+							game.instruct("Game over: tie game. Click to play again.");
 							game_over = true;
 						}
 					}
 					if (game_over) {
 						$('body').removeClass('game-on');
+						$('td').off('click'); // remove event handler
+						setTimeout(function(){$('body').click(game.begin)}, 1); // wait 1 millisecond, otherwise gets triggered by the click that made the turn
 					}
 					else {
 						game.turn = game.turn=="X" ? "O" : "X";
 						game.turn_begin();
 					}
 				});
-				$('input').attr('disabled', 'disabled');
 				game.turn_begin();
 			},
 			turn_begin: function() {
