@@ -17,27 +17,24 @@
 			margin: 0 auto;
 			cursor: default;
 			border-spacing: 0;
-			border: 1px solid black;
 		}
 		td {
 			padding: 0;
-			border: 1px solid black;
 			width: 200px;
 			height: 200px;
 			line-height: 200px;
 			font-size: 8em;
 		}
-		body.game-on td {
-			cursor: pointer;
+		table, td { /* by giving both a 1px border, everything gets a 2px border on all sides */
+			border: 1px solid black;
 		}
 		body.game-on td:hover {
+			cursor: pointer;
 			background-color: gray;
 		}
-		body.game-on td.taken {
-			cursor: pointer;
-		}
 		body.game-on td.taken:hover {
-			background-color: white;
+			cursor: default;
+			background-color: inherit;
 		}
 		td.win {
 			background-color: blue;
