@@ -69,14 +69,11 @@
 			},
 			check_win_row: function(row) {
 				var cells = $('tr:eq(' + row + ') td');
-				if (cells.eq(0).text() == cells.eq(1).text() && cells.eq(1).text() == cells.eq(2).text()) {
-					return true;
-				}
-				return false;
+				return cells.eq(0).text() == cells.eq(1).text() && cells.eq(1).text() == cells.eq(2).text();
 			},
 			check_win_col: function(col) {
-				// do
-				return false;
+				cells = [$('tr:eq(0) td:eq(' + col + ')').text(), $('tr:eq(1) td:eq(' + col + ')').text(), $('tr:eq(2) td:eq(' + col + ')').text()];
+				return cells[0] == cells[1] && cells[1] == cells[2];
 			}
 		};
 		$(function(){
