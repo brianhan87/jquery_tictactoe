@@ -56,14 +56,14 @@
 				$('td')
 					.text('')
 					.removeClass('taken')
-					.removeClass('win');
-				// begin
-				$('body').addClass('game-on');
-				$('td').click(function(){
-					if ($(this).hasClass('taken')) {
-						return false;
-					}
-					$(this).text(game.turn).addClass('taken');
+					.removeClass('win')
+				// set up event handler for taking a turn
+				$('td').click(function() {
+					$(this)
+						.text(game.turn) // put an X or O in the cell
+						.addClass('taken') // display as taken
+						.off('click'); // don't allow clicking on it again
+					// check for game over
 					var game_over = false;
 					if ($('td.taken').length > 4) { // nobody can win until the 5th turn
 						if (game.win_on_turn($(this).parent().index(), $(this).index())) {
@@ -77,14 +77,16 @@
 					}
 					if (game_over) {
 						$('body').removeClass('game-on');
-						$('td').off('click'); // remove event handler
+						$('td').off('click'); // shouldn't be able to take turns any more
 						setTimeout(function(){$('body').click(game.begin)}, 1); // wait 1 millisecond, otherwise gets triggered by the click that made the turn
 					}
 					else {
-						game.turn = game.turn=="X" ? "O" : "X";
+						game.turn = game.turn == "X" ? "O" : "X"; // change whose turn it is
 						game.turn_begin();
 					}
 				});
+				// begin
+				$('body').addClass('game-on');
 				game.turn_begin();
 			},
 			turn_begin: function() {
