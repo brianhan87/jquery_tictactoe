@@ -96,7 +96,7 @@
 				a = game.cell(a[0], a[1]);
 				b = game.cell(b[0], b[1]);
 				c = game.cell(c[0], c[1]);
-				if (a.text()==b.text() && b.text()==c.text()) {
+				if (a.text() && a.text()==b.text() && b.text()==c.text()) {
 					a.addClass('win');
 					b.addClass('win');
 					c.addClass('win');
