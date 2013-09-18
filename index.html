@@ -14,6 +14,9 @@
 		}
 		table {
 			margin: 0 auto;
+			cursor: default;
+			border-spacing: 0;
+			border: 1px solid black;
 		}
 		td {
 			border: 1px solid black;
@@ -30,10 +33,13 @@
 			background-color: gray;
 		}
 		body.game-on td.taken {
-			cursor: auto;
+			cursor: pointer;
 		}
 		body.game-on td.taken:hover {
 			background-color: white;
+		}
+		td.win {
+			background-color: blue;
 		}
 	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -52,7 +58,7 @@
 					$(this).text(game.turn).addClass('taken');
 					var game_over = false;
 					if ($('td.taken').length > 4) { // nobody can win until the 5th turn
-						if (game.check_win($(this).parent().index(), $(this).index())) {
+						if (game.win_on_turn($(this).parent().index(), $(this).index())) {
 							game.instruct("Game over, " + game.turn + " won");
 							game_over = true;
 						}
@@ -61,7 +67,10 @@
 							game_over = true;
 						}
 					}
-					if (!game_over) {
+					if (game_over) {
+						$('body').removeClass('game-on');
+					}
+					else {
 						game.turn = game.turn=="X" ? "O" : "X";
 						game.turn_begin();
 					}
@@ -73,25 +82,31 @@
 				game.instruct('Your turn, ' + this.turn);
 			},
 			cell: function(row, col) {
-				return $('tr:eq(' + row + ') td:eq(' + col + ')').text();
+				return $('tr:eq(' + row + ') td:eq(' + col + ')');
 			},
-			cells_equal: function(a, b, c) {
+			check_n_show_win: function(a, b, c) {
 				a = game.cell(a[0], a[1]);
 				b = game.cell(b[0], b[1]);
 				c = game.cell(c[0], c[1]);
-				return a==b && b==c;
+				if (a.text()==b.text() && b.text()==c.text()) {
+					a.addClass('win');
+					b.addClass('win');
+					c.addClass('win');
+					return true;
+				}
+				return false;
 			},
-			check_win: function(row, col) { // check if there is a win after a new turn at [row, col]
-				if (game.cells_equal([row, 0], [row, 1], [row, 2])) { // check the row
+			win_on_turn: function(row, col) { // check if there is a win after a new turn at [row, col]
+				if (game.check_n_show_win([row, 0], [row, 1], [row, 2])) { // check the row
 					return true;
 				}
-				if (game.cells_equal([0, col], [1, col], [2, col])) { // check the column
+				if (game.check_n_show_win([0, col], [1, col], [2, col])) { // check the column
 					return true;
 				}
-				if (game.cells_equal([2,0], [1,1], [0,2])) { // check / diagonal
+				if (game.check_n_show_win([2,0], [1,1], [0,2])) { // check / diagonal
 					return true;
 				}
-				return game.cells_equal([0,0], [1,1], [2,2]); // check \ diagonal
+				return game.check_n_show_win([0,0], [1,1], [2,2]); // check \ diagonal
 			}
 		};
 		$(function(){
