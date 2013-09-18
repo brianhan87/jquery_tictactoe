@@ -87,7 +87,7 @@
 				game.turn_begin();
 			},
 			turn_begin: function() {
-				game.instruct('Your turn, ' + this.turn);
+				game.instruct('Your turn, ' + game.turn);
 			},
 			cell: function(row, col) {
 				return $('tr:eq(' + row + ') td:eq(' + col + ')');
